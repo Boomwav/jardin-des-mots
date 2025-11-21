@@ -1,0 +1,21 @@
+# Fichiers de dépendances (ne pas envoyer)
+**/node_modules
+**/package-lock.json
+
+# Fichiers compilés par Angular (ne pas envoyer)
+**/dist/
+**/dist-*
+**/build/
+
+# Fichiers spécifiques au système/IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Fichiers de configuration locaux ou sensibles
+.env
+.local
+
+# Fichiers de cache Docker (pour certaines configurations)
+*.log
+.dockerignore

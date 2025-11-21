@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # SERVICE BACKEND (NODE.JS / EXPRESS)
+  jardin-backend:
+    container_name: jardin-backend
+    build:
+      context: ./backend # Assurez-vous que le chemin est correct
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Expose le port pour le débug ou les tests directs (optionnel)
+    volumes:
+      - D:/Applications/Jardin des mots/db.json:/app/db.json # Le path Windows/Linux pour votre db.json (à ajuster)
+      # Exemple : - D:/Applications/Jardin des mots/db.json:/app/db.json
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    networks:
+      - jardin-network # Connecte au réseau interne
+
+  # SERVICE FRONTEND (ANGULAR / NGINX)
+  jardin-frontend:
+    container_name: jardin-frontend
+    build:
+      context: ./frontend # Assurez-vous que le chemin est correct (dossier Angular)
+      dockerfile: Dockerfile.frontend # Utilise le fichier créé ci-dessus
+    ports:
+      - "51200:80" # Mappe le port 80 du conteneur au port 80 de l'hôte
+      # Si le port 80 est pris, utilisez un autre port : - "51200:80"
+    depends_on:
+      - jardin-backend # Assure que le backend démarre en premier
+    restart: unless-stopped
+    networks:
+      - jardin-network # Connecte au réseau interne
+
+# Définition du réseau partagé
+networks:
+  jardin-network:
+    driver: bridge
