@@ -47,7 +47,7 @@
             [(ngModel)]="userInput"
             (keyup.enter)="valider()"
             placeholder="Tape le mot ici..."
-            class="w-full text-center text-2xl font-bold border-b-4 border-gray-300 focus:border-blue-500 outline-none py-2 mb-4 bg-transparent uppercase"
+            class="w-full text-center text-2xl font-bold border-b-4 border-gray-300 focus:border-blue-500 outline-none py-2 mb-4 bg-transparent"
             [ngClass]="{
               'text-red-500': game.feedbackState() === 'error',
               'text-green-500': game.feedbackState() === 'success'
@@ -55,7 +55,7 @@
           />
 
           <div *ngIf="game.feedbackState() === 'error'" class="text-red-500 font-bold mb-4 animate-pulse">
-            Mince ! C'était : <span class="text-xl uppercase">{{ game.currentWord()?.texte }}</span>
+            Mince ! C'était : <span class="text-xl">{{ game.currentWord()?.texte }}</span>
           </div>
 
           <button (click)="valider()"
