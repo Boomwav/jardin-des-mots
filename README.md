@@ -33,7 +33,7 @@ La méthode recommandée pour lancer l'application est d'utiliser Docker Compose
 ### Accès à l'Application
 
     Interface Utilisateur (Frontend) :
-    http://localhost:8080
+    http://localhost:51200
 
     API Backend (Test) :
     http://localhost:3000/api/data
