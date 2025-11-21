@@ -7,6 +7,48 @@ const PORT = 3000;
 // Le chemin interne dans le conteneur Docker (qui sera relié à ton D:)
 const DB_PATH = '/app/db.json';
 
+// --- Initialisation de la base de données ---
+function initializeDatabase() {
+    const defaultData = {
+        "profils": [
+            { "id": 1, "nom": "Liam", "avatar": "🐰", "inventaire": { "carotte": 3, "tomate": 0 }, "carottes_or": 0 },
+            { "id": 2, "nom": "Thomas", "avatar": "🌴", "inventaire": { "carotte": 3, "tomate": 0 }, "carottes_or": 0 }
+        ],
+        "listes": [
+            {
+                "id": 1,
+                "nom": "Liste Démo",
+                "mots": ["âge", "changer", "danger", "genou", "genre", "jeter", "jeune", "ménage", "nuage", "passage", "village"]
+            }
+        ]
+    };
+
+    try {
+        const stats = fs.statSync(DB_PATH);
+        if (stats.isDirectory()) {
+            console.log(`Le chemin de la base de données ${DB_PATH} est un répertoire. Il va être remplacé par le fichier par défaut.`);
+            fs.rmdirSync(DB_PATH);
+            fs.writeFileSync(DB_PATH, JSON.stringify(defaultData, null, 2));
+            console.log("Le répertoire a été remplacé par le fichier db.json avec succès.");
+        }
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            // Le fichier n'existe pas, c'est le cas attendu pour une première initialisation.
+            console.log("Le fichier db.json n'existe pas. Création avec les données par défaut...");
+            fs.writeFileSync(DB_PATH, JSON.stringify(defaultData, null, 2));
+            console.log("Fichier db.json créé avec succès.");
+        } else {
+            // Gérer d'autres erreurs potentielles (ex: droits, etc.)
+            console.error("Erreur inattendue lors de l'initialisation de la base de données:", err);
+            process.exit(1); // On arrête l'application si la BDD ne peut être initialisée
+        }
+    }
+}
+
+// Appel de la fonction d'initialisation au démarrage
+initializeDatabase();
+// --- Fin de l'initialisation ---
+
 app.use(cors()); // Autorise Angular à parler au serveur
 app.use(express.json());
 
