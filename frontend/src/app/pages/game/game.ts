@@ -27,9 +27,12 @@ export class GameComponent implements OnInit {
 
     // Chargement des données pour récupérer les mots
     this.api.getData().subscribe(data => {
-      const liste = data.listes.find(l => l.id === listeId);
-      if (liste) {
-        this.game.startSession(liste.mots);
+      const profil = data.profils.find(p => p.id === this.profilId);
+      if (profil && profil.listes) {
+        const liste = profil.listes.find(l => l.id === listeId);
+        if (liste) {
+          this.game.startSession(liste.mots);
+        }
       }
     });
   }

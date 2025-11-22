@@ -12,6 +12,7 @@ export interface Profil {
   avatar: string;
   inventaire: Inventaire;
   carottes_or: number;
+  listes: ListeMots[];
 }
 
 export interface ListeMots {
@@ -22,5 +23,4 @@ export interface ListeMots {
 
 export interface DbData {
   profils: Profil[];
-  listes: ListeMots[];
 }

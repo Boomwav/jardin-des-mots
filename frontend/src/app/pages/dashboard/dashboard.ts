@@ -34,9 +34,11 @@ export class DashboardComponent implements OnInit {
         
         // On cherche le profil correspondant à l'ID
         this.profil = data.profils.find(p => p.id === idRecherche);
-        this.listes = data.listes;
 
-        if (!this.profil) {
+        // On récupère les listes directement depuis le profil
+        if (this.profil) {
+          this.listes = this.profil.listes || [];
+        } else {
           this.erreur = `Impossible de trouver le profil n°${idRecherche}`;
         }
 

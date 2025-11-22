@@ -1,0 +1,26 @@
+{
+  "profils": [
+    {
+      "id": 1,
+      "nom": "Léo",
+      "avatar": "🦁",
+      "inventaire": {
+        "carotte": 5,
+        "tomate": 2
+      },
+      "carottes_or": 1,
+      "listes": [
+        {
+          "id": 1,
+          "nom": "Les animaux",
+          "mots": ["chien", "chat", "oiseau"]
+        },
+        {
+          "id": 2,
+          "nom": "Les couleurs",
+          "mots": ["rouge", "vert", "bleu"]
+        }
+      ]
+    }
+  ]
+}
