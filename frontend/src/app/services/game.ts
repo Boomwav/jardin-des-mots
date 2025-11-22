@@ -1,73 +1,74 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { StateService } from './state';
 
 export interface MotJeu {
   texte: string;
-  erreurs: number; // Combien de fois l'enfant s'est trompé sur ce mot
+  erreurs: number; // How many times the child has made a mistake on this word
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private apiUrl = 'http://localhost:3000/api';
+  private state = inject(StateService);
+  private profilId: number | null = null;
 
-  // --- ÉTATS DU JEU (SIGNALS) ---
+  // --- GAME STATES (SIGNALS) ---
   
-  // Le mot actuel à écrire
+  // The current word to write
   currentWord = signal<MotJeu | null>(null);
   
-  // La file d'attente des mots restants
+  // The queue of remaining words
   queue = signal<MotJeu[]>([]);
   
-  // État du légume (0 = graine, 1 = pousse, 2 = grand, 3 = récolté)
+  // Vegetable state (0 = seed, 1 = sprout, 2 = grown, 3 = harvested)
   vegetableStage = signal<number>(0);
   
-  // Compteur de succès d'affilée (pour la carotte d'or)
+  // Consecutive success counter (for the golden carrot)
   streak = signal<number>(0);
   
-  // Feedback visuel ('waiting', 'success', 'error')
+  // Visual feedback ('waiting', 'success', 'error')
   feedbackState = signal<'waiting' | 'success' | 'error'>('waiting');
 
-  constructor(private http: HttpClient) {}
+  // 1. Initialize a session
+  startSession(profilId: number, wordList: string[]) {
+    this.profilId = profilId;
 
-  // 1. Initialiser une session
-  startSession(listeMots: string[]) {
-    // On transforme les string en objets de jeu
-    const file = listeMots.map(m => ({ texte: m, erreurs: 0 }));
-    // Mélanger la liste (optionnel)
+    // Transform strings into game objects
+    const file = wordList.map(m => ({ texte: m, erreurs: 0 }));
+    // Shuffle the list (optional)
     this.queue.set(file.sort(() => Math.random() - 0.5));
     this.streak.set(0);
     this.vegetableStage.set(0);
     this.nextWord();
   }
 
-  // 2. Passer au mot suivant
+  // 2. Move to the next word
   private nextWord() {
     const q = this.queue();
     if (q.length === 0) {
       this.currentWord.set(null);
-      // TODO: Déclencher la fin de partie (Victoire!)
+      // TODO: Trigger end of game (Victory!)
       return;
     }
     
-    const next = q[0]; // On prend le premier
+    const next = q[0]; // Take the first one
     this.currentWord.set(next);
     this.feedbackState.set('waiting');
     
-    // On met à jour la file (on retire le mot qu'on vient de prendre)
+    // Update the queue (remove the word we just took)
     this.queue.set(q.slice(1));
 
-    // On lit le mot après un court délai
+    // Read the word after a short delay
     setTimeout(() => this.speak(next.texte), 500);
   }
 
-  // 3. Vérifier la réponse de l'enfant
+  // 3. Check the child's answer
   checkAnswer(inputUser: string) {
     const target = this.currentWord();
     if (!target) return;
 
-    // On nettoie l'input (minuscule, sans espace)
+    // Clean the input (lowercase, no spaces)
     const cleanInput = inputUser.trim().toLowerCase();
     const cleanTarget = target.texte.trim().toLowerCase();
 
@@ -81,49 +82,47 @@ export class GameService {
   private handleSuccess() {
     this.feedbackState.set('success');
     
-    // 1. Le légume pousse
+    // 1. The vegetable grows
     this.vegetableStage.update(v => Math.min(v + 1, 3));
 
-    // 2. Gestion du Streak (Carotte d'or)
+    // 2. Streak management (Golden Carrot)
     this.streak.update(s => s + 1);
     if (this.streak() === 3) {
-        // TODO: Ajouter une carotte d'or à l'inventaire local
-        // playSound('gold-success');
-        this.streak.set(0); // Reset après récompense ? ou continuer ?
+        if (this.profilId) this.state.addCarotteOr(this.profilId);
+        this.streak.set(0);
     }
 
-    // 3. Si le légume est mûr (stade 3)
+    // 3. If the vegetable is ripe (stage 3)
     if (this.vegetableStage() >= 3) {
-        // TODO: Ajouter légume à l'inventaire local
-        // Reset du légume pour le prochain
+        if (this.profilId) this.state.addCarotte(this.profilId);
         setTimeout(() => this.vegetableStage.set(0), 1000);
     }
 
-    // Mot suivant après 1.5 secondes (temps de voir le vert)
+    // Next word after 1.5 seconds (time to see the green)
     setTimeout(() => this.nextWord(), 1500);
   }
 
   private handleError(mot: MotJeu) {
     this.feedbackState.set('error');
-    this.streak.set(0); // Brise la chaîne
+    this.streak.set(0); // Break the chain
     
-    // Le mot est remis à la fin de la file
+    // The word is put back at the end of the queue
     const newMot = { ...mot, erreurs: mot.erreurs + 1 };
     this.queue.update(q => [...q, newMot]);
     
-    // Pas de mot suivant tout de suite, on laisse l'enfant voir la correction
-    // Il devra peut-être appuyer sur "Continuer" ou on attend 3 secondes
+    // No next word right away, let the child see the correction
+    // They may need to press "Continue" or we wait 3 seconds
     setTimeout(() => {
-        // On relance le mot suivant (qui est un nouveau mot, car l'actuel est parti à la fin)
+        // We launch the next word (which is a new word, as the current one has gone to the end)
         this.nextWord();
     }, 3000);
   }
 
-  // --- Outil TTS ---
+  // --- TTS Tool ---
   speak(text: string) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'fr-FR';
-    // Petit hack pour forcer une voix correcte si dispo
+    // Small hack to force a correct voice if available
     const voices = window.speechSynthesis.getVoices();
     const frVoice = voices.find(v => v.lang.includes('fr') && !v.name.includes('Google')); 
     if(frVoice) utterance.voice = frVoice;

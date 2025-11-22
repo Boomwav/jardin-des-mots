@@ -48,6 +48,11 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "test": {
+              "polyfills": [
+                "src/test.ts"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -68,7 +73,11 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "frontend:build:test",
+            "tsConfig": "tsconfig.test.json"
+          }
         }
       }
     }
