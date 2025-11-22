@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ListeMots, Profil, DbData } from '../../models.ts';
-import { WordListService } from '../services/word-list.service.ts';
-import { ApiService } from '../../services/api.ts';
+import { ListeMots, Profil, DbData } from '../../../models';
+import { WordListService } from '../../services/word-list.service';
+import { ApiService } from '../../../services/api';
 
 @Component({
   selector: 'app-manage-lists',

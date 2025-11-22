@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ListeMots } from '../../models.ts';
+import { ListeMots } from '../../models';
 
 @Injectable({
   providedIn: 'root'

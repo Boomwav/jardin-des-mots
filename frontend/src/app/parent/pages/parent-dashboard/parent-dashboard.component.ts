@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Profil, DbData } from '../../models.ts';
-import { ApiService } from '../../services/api.ts';
+import { Profil, DbData } from '../../../models';
+import { ApiService } from '../../../services/api';
 
 @Component({
   selector: 'app-parent-dashboard',
