@@ -53,7 +53,14 @@ export class GameComponent implements OnInit {
     // Sauvegarder le progrès (très simplifié pour l'instant)
     // Dans une V2, on ferait ça dans le service proprement
     if (this.game.vegetableStage() === 3) {
+      console.log('Légume terminé ! Sauvegarde du gain.');
+      console.log('Streak actuelle :', this.game.streak());
+
+      if(this.game.streak() >= 3) {
+        this.sauvegarderGain('carotte_or');
+      } else {
         this.sauvegarderGain('carotte');
+      }
     }
   }
 

@@ -2,7 +2,7 @@
 
 export interface Inventaire {
   carotte: number;
-  tomate: number;
+  carotte_or: number;
   [key: string]: number; // Permet d'autres légumes futurs
 }
 
@@ -11,7 +11,6 @@ export interface Profil {
   nom: string;
   avatar: string;
   inventaire: Inventaire;
-  carottes_or: number;
   listes: ListeMots[];
 }
 

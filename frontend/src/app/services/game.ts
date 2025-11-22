@@ -86,12 +86,7 @@ export class GameService {
 
     // 2. Gestion du Streak (Carotte d'or)
     this.streak.update(s => s + 1);
-    if (this.streak() === 3) {
-        // TODO: Ajouter une carotte d'or à l'inventaire local
-        // playSound('gold-success');
-        this.streak.set(0); // Reset après récompense ? ou continuer ?
-    }
-
+ 
     // 3. Si le légume est mûr (stade 3)
     if (this.vegetableStage() >= 3) {
         // TODO: Ajouter légume à l'inventaire local
