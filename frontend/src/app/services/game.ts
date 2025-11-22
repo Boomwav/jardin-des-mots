@@ -87,15 +87,16 @@ export class GameService {
 
     // 2. Streak management (Golden Carrot)
     this.streak.update(s => s + 1);
-    if (this.streak() === 3) {
-        if (this.profilId) this.state.addCarotteOr(this.profilId);
-        this.streak.set(0);
-    }
 
     // 3. If the vegetable is ripe (stage 3)
     if (this.vegetableStage() >= 3) {
-        if (this.profilId) this.state.addCarotte(this.profilId);
-        setTimeout(() => this.vegetableStage.set(0), 1000);
+      if(this.profilId) {
+        if(this.streak() >= 3)
+          this.state.addCarotteOr(this.profilId);
+        else
+          this.state.addCarotte(this.profilId);
+      }
+      setTimeout(() => this.vegetableStage.set(0), 1000);
     }
 
     // Next word after 1.5 seconds (time to see the green)
