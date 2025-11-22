@@ -21,7 +21,7 @@ const mockDbData: DbData = {
       inventaire: { carotte: 0, tomate: 0 },
       carottes_or: 0,
       listes: [
-        { id: 1, nom: 'Liste 1', mots: ['un', 'deux'] }
+        { id: 1, titre: 'Liste 1', description: 'desc 1', mots: ['un', 'deux'] }
       ]
     }
   ]

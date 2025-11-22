@@ -8,5 +8,9 @@ export const routes: Routes = [
   { path: '', component: HomeComponent }, // Accueil (Choix profil)
   { path: 'dashboard/:id', component: DashboardComponent }, // Choix liste
   { path: 'game/:profilId/:listeId', component: GameComponent }, // Le jeu
+  {
+    path: 'parent',
+    loadChildren: () => import('./parent/parent.module').then(m => m.ParentModule)
+  },
   { path: '**', redirectTo: '' }
 ];

@@ -17,7 +17,8 @@ export interface Profil {
 
 export interface ListeMots {
   id: number;
-  nom: string;
+  titre: string;
+  description: string;
   mots: string[];
 }
 

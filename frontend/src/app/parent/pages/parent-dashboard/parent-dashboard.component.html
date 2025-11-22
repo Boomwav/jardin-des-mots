@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+  <h1 class="text-4xl font-bold text-gray-800 mb-8">Qui est-ce qui veut gérer ses listes ?</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    @for (profil of profils; track profil.id) {
+      <div (click)="selectProfil(profil.id)"
+           class="cursor-pointer bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col items-center">
+        <div class="text-6xl mb-4">{{ profil.avatar }}</div>
+        <div class="text-xl font-bold text-gray-700">{{ profil.nom }}</div>
+      </div>
+    } @empty {
+        <p class="text-gray-500">Aucun profil n'a été trouvé.</p>
+    }
+  </div>
+
+  <div class="mt-8">
+      <a routerLink="/" class="text-blue-500 hover:underline">Retour à l'accueil</a>
+  </div>
+</div>

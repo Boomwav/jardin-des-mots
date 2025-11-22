@@ -12,12 +12,14 @@
       "listes": [
         {
           "id": 1,
-          "nom": "Les animaux",
+          "titre": "Les animaux",
+          "description": "Une liste d'animaux.",
           "mots": ["chien", "chat", "oiseau"]
         },
         {
           "id": 2,
-          "nom": "Les couleurs",
+          "titre": "Les couleurs",
+          "description": "Une liste de couleurs.",
           "mots": ["rouge", "vert", "bleu"]
         }
       ]
